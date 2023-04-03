@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "hord-watcher-chart.fullname" . }}-configmap
+  labels:
+    {{- include "hord-watcher-chart.labels" . | nindent 4 }}
+data:
+  APP_PORT: {{ .Values.service.port | quote }}
+  {{- if .Values.hordWatcher.watchedNamespaces }}
+  APP_NAMESPACES: {{ join "," .Values.hordWatcher.watchedNamespaces }}
+  {{ end }}
