@@ -1,7 +1,7 @@
 FROM alpine:3.18.4
 ARG PROJECT_NAME=hord_watcher
 COPY target/release/${PROJECT_NAME} /app/${PROJECT_NAME}
-RUN adduser watcher
+RUN adduser -D -g "watcher" watcher
 USER watcher
 EXPOSE 3000
 
