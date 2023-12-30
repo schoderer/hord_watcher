@@ -1,6 +1,6 @@
 [package]
 name = "hord_watcher"
-version = "0.1.0"
+version = "0.2.5"
 edition = "2021"
 
 
@@ -10,11 +10,11 @@ strip = "debuginfo"
 
 [dependencies]
 anyhow = "1.0.70"
-axum = { version = "0.6.12", features = ["macros"] }
+axum = { version = "0.7.3", features = ["macros"] }
 config = "0.13.3"
 futures = "0.3.28"
 k8s-openapi = { version = "0.20.0", features = ["v1_23"] }
-kube = { version = "0.86.0", default-features = false, features = ["rustls-tls","client", "runtime"] }
+kube = { version = "0.87.2", default-features = false, features = ["rustls-tls","client", "runtime"] }
 serde = { version = "1.0.160", features = ["derive"] }
 tokio = { version = "1.27.0", features = ["rt-multi-thread", "time", "sync", "macros"] }
 tracing = "0.1.37"

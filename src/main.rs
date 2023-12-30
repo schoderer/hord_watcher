@@ -1,5 +1,3 @@
-use std::net::SocketAddr;
-
 use axum::{http::StatusCode, response::IntoResponse, routing::get, Router};
 
 use crate::events::{watch_kubernetes_events, WatchedNamespaces};
@@ -28,13 +26,11 @@ async fn main() -> anyhow::Result<()> {
 }
 
 async fn start_server(port: u16) {
-    let addr = SocketAddr::from(([0, 0, 0, 0], port));
-    tracing::info!("listening on {}", addr);
+    let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{port}")).await.unwrap();
+    tracing::info!("listening on {port}");
 
     let app = Router::new().route("/health", get(health_check));
-
-    let server = axum::Server::bind(&addr).serve(app.into_make_service());
-    if let Err(err) = server.await {
+    if let Err(err) = axum::serve(listener, app).await {
         tracing::error!("Shutting server down due to error: {err}");
     }
 }
