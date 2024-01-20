@@ -13,8 +13,8 @@ jobs:
     - uses: cachix/install-nix-action@v22
       with:
         github_access_token: ${{ secrets.GITHUB_TOKEN }}
-    - run: nix build .#dockerImage
     - run: nix flake check
+    - run: nix build .#dockerImage
     - name: 'Login to GitHub Container Registry'
       uses: docker/login-action@v3
       with:
