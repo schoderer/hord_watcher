@@ -1,14 +1,29 @@
 name: "Test"
 on:
-  pull_request:
   push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
 jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+    - name: Set env
+      run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
     - uses: cachix/install-nix-action@v22
       with:
         github_access_token: ${{ secrets.GITHUB_TOKEN }}
-    - run: nix build
+    - run: nix build .#dockerImage
     - run: nix flake check
+    - name: 'Login to GitHub Container Registry'
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{secrets.GITHUB_TOKEN}}
+    - name: 'Publishing Image'
+      run: |
+        docker load < result
+        docker push ghcr.io/${{github.repository}}:latest
+        docker tag ghcr.io/${{github.repository}}:latest ghcr.io/${{github.repository}}:${RELEASE_VERSION}
+        docker push ghcr.io/${{github.repository}}:${RELEASE_VERSION}

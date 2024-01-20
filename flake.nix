@@ -43,7 +43,7 @@
           });
           dockerImage = pkgs.dockerTools.buildImage {
             name = "ghcr.io/schoderer/hord_watcher";
-            tag = "0.1.0";
+            tag = "latest";
             copyToRoot = [ bin ];
             config = {
               Cmd = [ "${bin}/bin/hord_watcher" ];
