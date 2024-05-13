@@ -4,4 +4,4 @@ description: A Helm chart for hord-watcher
 
 type: application
 version: 0.1.4
-appVersion: "v0.2.9"
+appVersion: "v0.2.11"
