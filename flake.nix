@@ -17,9 +17,10 @@
 
         # Configure the rust toolchain
         rustToolchain = pkgs.rust-bin.stable.latest.default.override {
+          targets = [ "x86_64-unknown-linux-musl" ];
           extensions = [ "rust-analyzer" "rust-src" "clippy" "rustfmt" ];
         };
-        
+
         craneLib = (crane.mkLib pkgs).overrideToolchain rustToolchain;
         src = craneLib.cleanCargoSource ./.;
 
@@ -30,6 +31,9 @@
           nativeBuildInputs = with pkgs; [ rustToolchain pkg-config ];
           buildInputs = with pkgs; [ openssl ];
           inherit src;
+          strictDeps = true;
+          CARGO_BUILD_TARGET = "x86_64-unknown-linux-musl";
+          CARGO_BUILD_RUSTFLAGS = "-C target-feature=+crt-static";
         };
 
         cargoArtifacts = craneLib.buildDepsOnly args;
@@ -46,7 +50,7 @@
           tag = "latest";
           created = "now"; # Breaks binary reproducable, but creation is not epoch
 
-          copyToRoot = [ bin ];
+          #copyToRoot = [ bin ];
           config = {
             Cmd = [ "${bin}/bin/hord_watcher" ];
             User = "7337:7337"; # Run this not as root
